@@ -238,7 +238,7 @@ This is a college project. If you're a teammate:
 
 ## Acknowledgments
 
-- Built as part of [Course Name] NLP project
+- Built as part of NLP project
 - spaCy for NLP capabilities
 - SymPy for mathematical processing
 - FastAPI for the excellent web framework
