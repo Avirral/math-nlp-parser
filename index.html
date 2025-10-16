@@ -1,357 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math NLP Parser</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
-            width: 100%;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2.5em;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.1em;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 100px;
-            transition: border-color 0.3s;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .result {
-            margin-top: 30px;
-            padding: 25px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 5px solid #667eea;
-            display: none;
-        }
-
-        .result.show {
-            display: block;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .result h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-
-        .latex-output {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-size: 1.5em;
-            text-align: center;
-            border: 2px solid #e0e0e0;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .info-item {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .info-label {
-            font-weight: 600;
-            color: #667eea;
-            font-size: 0.9em;
-            margin-bottom: 5px;
-        }
-
-        .info-value {
-            color: #333;
-            font-size: 1em;
-        }
-
-        .error {
-            background: #fee;
-            border-left-color: #f44336;
-        }
-
-        .error h3 {
-            color: #f44336;
-        }
-
-        .examples {
-            margin-top: 20px;
-            padding: 20px;
-            background: #f0f4ff;
-            border-radius: 10px;
-        }
-
-        .examples h4 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .example-item {
-            padding: 8px 12px;
-            margin: 5px 0;
-            background: white;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 0.95em;
-        }
-
-        .example-item:hover {
-            background: #e8eeff;
-        }
-
-        .loader {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
-    <!-- MathJax for rendering LaTeX -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MathNLP Parser</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Geist:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+    }
+    body {
+      background: #18181b;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Geist', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #f3f3f3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .heading {
+      font-family: 'Instrument Serif', serif;
+      font-size: 2.2em;
+      color: #fff;
+      margin-top: 3em;
+      margin-bottom: 2em;
+      letter-spacing: 0.01em;
+      text-align: center;
+      font-weight: 400;
+    }
+    .center-box {
+      width: 100%;
+      max-width: 520px;
+      background: #23232a;
+      border: 2px solid #fff;
+      border-radius: 0;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+      padding: 1.5em 1.2em 1em 1.2em;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      margin-bottom: 2em;
+    }
+    .center-box textarea, .center-box .output {
+      width: 100%;
+      background: #18181b;
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 0;
+      font-size: 1.1em;
+      font-family: 'Geist', sans-serif;
+      padding: 1em;
+      min-height: 100px;
+      resize: vertical;
+      margin-bottom: 1em;
+      box-sizing: border-box;
+      transition: background 0.2s, color 0.2s;
+      text-align: left;
+    }
+    .center-box .output {
+      min-height: 100px;
+      display: none;
+      word-break: break-all;
+      text-align: center;
+      font-size: 1.2em;
+    }
+    .center-box .output.show {
+      display: block;
+    }
+    .button-row {
+      display: flex;
+      gap: 0;
+      width: 100%;
+    }
+    .button-row button {
+      flex: 1 1 0;
+      background: #18181b;
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 0;
+      font-family: 'Geist', sans-serif;
+      font-size: 1em;
+      font-weight: 500;
+      padding: 0.9em 0;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      margin: 0;
+    }
+    .button-row button:not(:last-child) {
+      border-right: none;
+    }
+    .button-row button:hover {
+      background: #fff;
+      color: #23232a;
+    }
+    @media (max-width: 600px) {
+      .center-box {
+        max-width: 98vw;
+      }
+    }
+  </style>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>📐 Math NLP Parser</h1>
-        <p class="subtitle">Convert natural language to mathematical notation</p>
-
-        <div class="input-group">
-            <label for="input">Enter mathematical expression in plain English:</label>
-            <textarea id="input" placeholder="e.g., integrate x squared with respect to y"></textarea>
-        </div>
-
-        <button id="parseBtn" onclick="parseExpression()">Parse Expression</button>
-
-        <div class="examples">
-            <h4>💡 Try these examples:</h4>
-            <div class="example-item" onclick="setExample('integrate x squared with respect to y')">
-                integrate x squared with respect to y
-            </div>
-            <div class="example-item" onclick="setExample('derivative of sin x with respect to x')">
-                derivative of sin x with respect to x
-            </div>
-            <div class="example-item" onclick="setExample('sum from i equals 1 to n of i squared')">
-                sum from i equals 1 to n of i squared
-            </div>
-            <div class="example-item" onclick="setExample('limit as x approaches 0 of sin x over x')">
-                limit as x approaches 0 of sin x over x
-            </div>
-            <div class="example-item" onclick="setExample('partial derivative of x squared y with respect to x')">
-                partial derivative of x squared y with respect to x
-            </div>
-        </div>
-
-        <div id="result" class="result"></div>
+  <div class="heading">MathNLP Parser</div>
+  <div class="center-box">
+    <textarea id="input" placeholder="e.g., integrate x squared with respect to y"></textarea>
+    <div class="output" id="output"></div>
+    <div class="button-row">
+      <button id="parseBtn" onclick="parseExpression()">Parse</button>
+      <button id="suggestBtn" onclick="suggestExample()">Suggest</button>
     </div>
-
-    <script>
-        const API_URL = 'http://localhost:8000/parse';
-
-        function setExample(text) {
-            document.getElementById('input').value = text;
-        }
-
-        async function parseExpression() {
-            const input = document.getElementById('input').value.trim();
-            const resultDiv = document.getElementById('result');
-            const parseBtn = document.getElementById('parseBtn');
-
-            if (!input) {
-                alert('Please enter a mathematical expression!');
-                return;
-            }
-
-            // Show loading state
-            parseBtn.disabled = true;
-            parseBtn.innerHTML = '<span class="loader"></span> Parsing...';
-            resultDiv.classList.remove('show');
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ text: input })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Success
-                    resultDiv.className = 'result show';
-                    resultDiv.innerHTML = `
-                        <h3>✅ Parsed Successfully!</h3>
-                        <div class="latex-output" id="latex-render">
-                            $$${data.latex}$$
-                        </div>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <div class="info-label">LaTeX Code</div>
-                                <div class="info-value"><code>${data.latex}</code></div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Plain Text</div>
-                                <div class="info-value">${data.plain_text}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Method</div>
-                                <div class="info-value">${data.method_used}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">Confidence</div>
-                                <div class="info-value">${(data.confidence * 100).toFixed(0)}%</div>
-                            </div>
-                        </div>
-                    `;
-                    
-                    // Re-render MathJax
-                    if (window.MathJax) {
-                        MathJax.typesetPromise([document.getElementById('latex-render')]);
-                    }
-                } else {
-                    // Error
-                    resultDiv.className = 'result show error';
-                    resultDiv.innerHTML = `
-                        <h3>❌ Parsing Failed</h3>
-                        <p>${data.detail || 'An error occurred while parsing the expression.'}</p>
-                        <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
-                            Try rephrasing your expression or check the examples above.
-                        </p>
-                    `;
-                }
-            } catch (error) {
-                // Network error
-                resultDiv.className = 'result show error';
-                resultDiv.innerHTML = `
-                    <h3>❌ Connection Error</h3>
-                    <p>Could not connect to the API server.</p>
-                    <p style="margin-top: 10px; font-size: 0.9em; color: #666;">
-                        Make sure the backend is running on http://localhost:8000
-                    </p>
-                `;
-            } finally {
-                // Reset button
-                parseBtn.disabled = false;
-                parseBtn.innerHTML = 'Parse Expression';
-            }
-        }
-
-        // Allow Enter key to submit (Shift+Enter for new line)
-        document.getElementById('input').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                parseExpression();
-            }
+  </div>
+  <script>
+    const API_URL = 'http://localhost:8000/parse';
+    const examples = [
+      'integrate x squared with respect to y',
+      'derivative of sin x with respect to x',
+      'sum from i equals 1 to n of i squared',
+      'limit as x approaches 0 of sin x over x',
+      'partial derivative of x squared y with respect to x'
+    ];
+    function suggestExample() {
+      const random = examples[Math.floor(Math.random() * examples.length)];
+      document.getElementById('input').value = random;
+      showInput();
+    }
+    async function parseExpression() {
+      const input = document.getElementById('input').value.trim();
+      const outputDiv = document.getElementById('output');
+      const inputBox = document.getElementById('input');
+      const parseBtn = document.getElementById('parseBtn');
+      if (!input) {
+        alert('Please enter a mathematical expression!');
+        return;
+      }
+      parseBtn.disabled = true;
+      parseBtn.innerText = 'Parsing...';
+      inputBox.style.display = 'none';
+      outputDiv.classList.remove('show');
+      outputDiv.innerHTML = '';
+      outputDiv.style.display = 'block';
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: input })
         });
-    </script>
+        const data = await response.json();
+        if (response.ok) {
+          outputDiv.innerHTML = `$$${data.latex}$$`;
+          outputDiv.classList.add('show');
+          if (window.MathJax) MathJax.typesetPromise([outputDiv]);
+        } else {
+          outputDiv.innerHTML = data.detail || 'Error parsing.';
+          outputDiv.classList.add('show');
+        }
+      } catch (error) {
+        outputDiv.innerHTML = 'Connection error.';
+        outputDiv.classList.add('show');
+      } finally {
+        parseBtn.disabled = false;
+        parseBtn.innerText = 'Parse';
+      }
+    }
+    function showInput() {
+      document.getElementById('output').style.display = 'none';
+      document.getElementById('input').style.display = 'block';
+    }
+    // Allow Enter key to submit (Shift+Enter for new line)
+    document.getElementById('input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        parseExpression();
+      }
+    });
+    // Clicking output brings back input
+    document.getElementById('output').addEventListener('click', showInput);
+  </script>
 </body>
 </html>
